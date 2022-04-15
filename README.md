@@ -174,3 +174,196 @@ function _draw()
 end
 ```
 
+### Now lets get the coin :D
+1. We need to be able to tell where that coin is, so lets make two variables coin_x and coin_y which give the position of the coin. Can you do it yourself?
+<details>
+<summary>Solution</summary>
+  
+```lua
+--variables
+player_x = 60
+player_y = 60
+
+coin_x = 20
+coin_y = 35
+
+--native function update stuff
+function _update()
+	if btn(⬆️) then
+		player_y -= 1
+	end
+	
+	if btn(⬇️) then
+		player_y += 1
+	end
+	
+	if btn(⬅️) then
+		player_x -= 1
+	end
+	
+	if btn(➡️) then
+		player_x += 1
+	end
+end
+
+--native function! draw stuff
+function _draw()
+	cls(1) //clear screen grey
+	
+	--draw player
+	spr(1,player_x,player_y)	
+	
+	--draw sprite 2 on 20,25
+	spr(2,coin_x,coin_y)
+end
+```
+</details>
+
+3. now we need to check if the player is on top of the coin and move it to a different position e.g. 60,60. 
+4. We could just check if the position of the player is the same as the one from the coin.
+5. Hint "if coin_x == player_x and coin_y == player_y then ..." might be helpfull, but where to put it?
+
+<details>
+<summary>Solution</summary>
+!!Spoiler!! this isn't optimal...  
+
+```lua
+--variables
+player_x = 60
+player_y = 60
+
+coin_x = 20
+coin_y = 35
+
+--native function update stuff
+function _update()
+	--player movement
+	if btn(⬆️) then
+		player_y -= 1
+	end
+	
+	if btn(⬇️) then
+		player_y += 1
+	end
+	
+	if btn(⬅️) then
+		player_x -= 1
+	end
+	
+	if btn(➡️) then
+		player_x += 1
+	end
+	
+	--check for coin
+	if player_x == coin_x and player_y == coin_y then
+		coin_x = 60
+		coin_y = 60
+	end
+end
+
+--native function! draw stuff
+function _draw()
+	cls(1) //clear screen grey
+	
+	--draw player
+	spr(1,player_x,player_y)	
+	
+	--draw sprite 2 on 20,25
+	spr(2,coin_x,coin_y)
+end
+```
+</details>
+
+But how to improve, we do not want the player to be at the exactly same position but to overlap the coin. So lets do that.
+
+### Collision
+1. lets create our own function which we call player_on_coin. This function will be a sensor which checks if the player is on top of the coin each time the update function gets called. If the player is on top it will answer with "yes" (or true in programming language) else with "no" (or false)
+
+```lua
+function player_on_coin()
+   if player_x >= coin_x and
+      player_x <= coin_x + 8 and
+      player_y >= coin_y and
+      player_y <= coin_y + 8 then
+   	return true
+   else 
+   	return false
+   end
+end
+```
+So instead of our if player_x == coin_x and so on in update we can now use this function. Can you find out how?
+
+<details>
+<summary>Solution</summary>
+
+```lua
+--variables
+player_x = 60
+player_y = 60
+
+coin_x = 20
+coin_y = 35
+
+--native function update stuff
+function _update()
+	--player movement
+	if btn(⬆️) then
+		player_y -= 1
+	end
+	
+	if btn(⬇️) then
+		player_y += 1
+	end
+	
+	if btn(⬅️) then
+		player_x -= 1
+	end
+	
+	if btn(➡️) then
+		player_x += 1
+	end
+	
+	--check for coin
+	if player_on_coin() then
+		coin_x = 60
+		coin_y = 60
+	end
+end
+
+--native function! draw stuff
+function _draw()
+	cls(1) //clear screen grey
+	
+	--draw player
+	spr(1,player_x,player_y)	
+	
+	--draw sprite 2 on 20,25
+	spr(2,coin_x,coin_y)
+end
+
+function player_on_coin()
+   if player_x >= coin_x and
+      player_x <= coin_x + 8 and
+      player_y >= coin_y and
+      player_y <= coin_y + 8 then
+   	return true
+   else 
+   	return false
+   end
+end
+```
+</details>
+
+### random positioning of the coin
+
+### UI for the score
+	
+### Other pico 8 features
+- Map
+- music / sfx
+
+### pico 8 cheat set
+
+### buying pico 8
+
+### pico 8 on a raspberry pi / Gameboy
