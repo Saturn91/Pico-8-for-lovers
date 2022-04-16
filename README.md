@@ -561,13 +561,119 @@ end
 the expected result:
 
 <img src="https://user-images.githubusercontent.com/12997366/163673012-38028bf7-5fc6-4158-b8e3-ce745ba39d56.png" width="400"/>
+
+### Ok we need more fun lets add an sound effect on coin collect
+Pico 8 offers an integrated sound editor which is fairly easy. It really is, you will see when you try out some videos about it on youtube [e.g. this](https://www.youtube.com/watch?v=nwFcitLtCsA&list=PLur95ujyAigsqZR1aNTrVGAvXD7EqywdS). for now, lets create one simple sound effect for the collect. In the Pico8 edu version click on the reversed play button icon in the top right.
 	
-### Other pico 8 features
+<img src="https://user-images.githubusercontent.com/12997366/163673104-a358b318-674f-4cb5-95e7-96309a1a4e2c.png" width="400"/>
+
+By clicking and drawing into the upper blackspace on the side you can "draw" your sound effect like this:
+
+<img src="https://user-images.githubusercontent.com/12997366/163673144-0e0d1d38-2f58-4695-8680-f00919cda9f6.png" width="400"/>
+
+Note that this is the "00" sfx and that you can create many more by clicking on the pink arrows to the right.
+
+To actually test the sound you just drew: hit space on your keyboard. Then adjust it to your likeing.
+
+To play the sound in code, you can use the sfx(0) function. this will play the sfx at position 00 (which we just created) once.
+
+Any Ideas yet where to do that in the code?
+<details>
+<summary>Solution</summary>
+	
+```lua
+--variables
+player_x = 60
+player_y = 60
+
+coin_x = 0
+coin_y = 0
+
+score = 0
+
+--native function 1call at start
+function _init()
+	new_coin_pos()	
+end
+
+--native function update stuff
+function _update()
+	--player movement
+	if btn(⬆️) then
+		player_y -= 1
+	end
+	
+	if btn(⬇️) then
+		player_y += 1
+	end
+	
+	if btn(⬅️) then
+		player_x -= 1
+	end
+	
+	if btn(➡️) then
+		player_x += 1
+	end
+	
+	--check for coin
+	if player_on_coin() then
+		score += 1
+		new_coin_pos()
+		sfx(0)
+	end
+end
+
+--native function! draw stuff
+function _draw()
+	cls(1) //clear screen grey
+	
+	print("score: "..score, 2, 2, 7)
+	
+	--draw player
+	spr(1,player_x,player_y)	
+	
+	--draw sprite 2 on 20,25
+	spr(2,coin_x,coin_y)
+end
+
+function player_on_coin()
+   if player_x >= coin_x - 8 and
+      player_x <= coin_x + 8 and
+      player_y >= coin_y - 8 and
+      player_y <= coin_y + 8 then
+   	return true
+   else 
+   	return false
+   end
+end
+
+function new_coin_pos()
+	coin_x = rnd() * 120
+	coin_y = rnd() * 120
+end
+```
+		       
+</details>
+
+We wont write our ownmusic in this tutorial, as it takes way to long. I highly suggest to watch some youtube videos on that topic ;-). In short you create music similiar as we did with our sound effect and then play it in a loop with music(0) (it is a little bit more to do... but pretty much this).
+	
+### Other pico 8 features to look into
 - Map
-- music / sfx
 
 ### pico 8 cheat set
+Gives you an overview about most functions pico 8 provides
+![PICO-8_CheatSheet](https://user-images.githubusercontent.com/12997366/163673455-248991d0-5bde-495e-affa-ddcbb71e42d6.png)
 
 ### buying pico 8
+I highly recommend spending the 15$ on Pico 8 full version anyway as it gives you a lot more possibility to export your game. e.g. as Web build, Windows, Linux or Max build. And it also shows some love to the developper which did a really good job!
+
+Keep in mind that you only pay once and you have a life long access to the download link to download ALL existing OS versions!
+
+Also you get Splore, the possibility to download and play the newest games for Pico8 which where released on the pico87 website.
+
+<img src="https://user-images.githubusercontent.com/12997366/163673586-bf927bf3-a0f4-4727-94cf-5430b0f5b636.png" width="400"/>
 
 ### pico 8 on a raspberry pi / Gameboy
+Pico 8 runs fantasticly on any Raspberry PI which makes Raspberry Pi almost to an Operating system which allows you to make games on very minimalistic machines. This could be a good opertunity to give Children a Computer they can play games on and learn programming in a safe environement. (other than for downloading games you dont need Internet ;-).
+
+I have a neet little Gameboy mock which runs Pico8 this allows me to play my own Games on a original feeling Gameboy :D I love that!
