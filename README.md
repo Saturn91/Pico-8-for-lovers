@@ -355,6 +355,35 @@ end
 </details>
 
 ### random positioning of the coin
+Ok so the basics are working. You could now define a hundert different positions within the code and we would be finished :D but the game would always be the same... boring! Also it would be a lot of work. We can do better!
+Lets look at the "rnd" function. A lot of programming languages provide some kind of random functions to generate random numbers. Our rnd() function will generate a number from 0..1 (excluding one). We can test this in the Pico 8 console. 
+	
+1. hit ESC to go back to the console
+2. type "print(rnd())" and hit enter
+3. repeat some time (you can get the last command you typed by pressing the "up" arrow if you are in the console)
+	
+<img src="https://user-images.githubusercontent.com/12997366/163667187-eda3f88c-7513-48df-842e-21114dc53a41.png" width="400"/>
+
+4. What you get is some random numbers between 0 and 1 (which will never be 1!). Please also note that I already introduced you to the print function :D we will come back to that later.
+5. So how can we make use of this to implement this in our game?
+- the screen in Pico8 is 128 x 128 pixels wide.
+- a sprite in Pico 8 (like our Coin) is 8 pixels in x and y coordinates
+- a spr(...) function draws the sprites upper left corner on the postion we give to it...
+- so we need for both coordinates a value from (0-120)
+- how could we do this using this rnd() function? Maybe already within a seperat function "new_coin_pos()"?
+
+<details>
+<summary>Solution</summary>
+
+```lua
+function new_coin_pos()
+	coin_x = rnd() * 120
+	coin_y = rnd() * 120
+end
+```
+</details>
+
+<img src="https://user-images.githubusercontent.com/12997366/163667444-18ec4b9d-3e01-4d46-a44e-b5aaf7d56c42.png" width="400"/>
 
 ### UI for the score
 	
