@@ -281,9 +281,9 @@ But how to improve, we do not want the player to be at the exactly same position
 
 ```lua
 function player_on_coin()
-   if player_x >= coin_x and
+   if player_x >= coin_x - 8 and
       player_x <= coin_x + 8 and
-      player_y >= coin_y and
+      player_y >= coin_y - 8 and
       player_y <= coin_y + 8 then
    	return true
    else 
@@ -342,9 +342,9 @@ function _draw()
 end
 
 function player_on_coin()
-   if player_x >= coin_x and
+   if player_x >= coin_x - 8 and
       player_x <= coin_x + 8 and
-      player_y >= coin_y and
+      player_y >= coin_y - 8 and
       player_y <= coin_y + 8 then
    	return true
    else 
@@ -381,11 +381,186 @@ function new_coin_pos()
 	coin_y = rnd() * 120
 end
 ```
+<img src="https://user-images.githubusercontent.com/12997366/163667444-18ec4b9d-3e01-4d46-a44e-b5aaf7d56c42.png" width="400"/>
 </details>
 
-<img src="https://user-images.githubusercontent.com/12997366/163667444-18ec4b9d-3e01-4d46-a44e-b5aaf7d56c42.png" width="400"/>
+We can use this function now within our code which results in:
 
-### UI for the score
+```lua
+--variables
+player_x = 60
+player_y = 60
+
+coin_x = 20
+coin_y = 35
+
+--native function update stuff
+function _update()
+	--player movement
+	if btn(⬆️) then
+		player_y -= 1
+	end
+	
+	if btn(⬇️) then
+		player_y += 1
+	end
+	
+	if btn(⬅️) then
+		player_x -= 1
+	end
+	
+	if btn(➡️) then
+		player_x += 1
+	end
+	
+	--check for coin
+	if player_on_coin() then
+		new_coin_pos()
+	end
+end
+
+--native function! draw stuff
+function _draw()
+	cls(1) //clear screen grey
+	
+	--draw player
+	spr(1,player_x,player_y)	
+	
+	--draw sprite 2 on 20,25
+	spr(2,coin_x,coin_y)
+end
+
+function player_on_coin()
+   if player_x >= coin_x - 8 and
+      player_x <= coin_x + 8 and
+      player_y >= coin_y - 8 and
+      player_y <= coin_y + 8 then
+   	return true
+   else 
+   	return false
+   end
+end
+
+function new_coin_pos()
+	coin_x = rnd() * 120
+	coin_y = rnd() * 120
+end
+```
+
+Now as we have this new function why should we not also place the coin at a random position right at the beginning? Let me introduce you to an other not yet explained native pico8 function: _init. This function will get called first before all other code is run. Lets show this to you by actually using it.
+
+Lets also for better readability set the default values of the coin_x and y to 0, just to initialize the variables.
+```lua
+coin_x = 0
+coin_y = 0
+
+--native function, runs once at start
+function _init()
+	new_coin_pos()	
+end
+```
+
+Make sure to test that each time you press CTRL + R the coin is in a different location as the game starts.
+
+### Game boring - need score!
+Next thing on our todo list is to show a score which we increase each time the player collects a coin. Lets do that using the print function which we already used in the console.
+
+The print function allows you to display text on screen. 
+
+```lua
+print(text, xPos, yPos, text-color) //not functional code just the explenation ;-) 
+
+--print score (functional code)
+score = 0
+
+print("score: "..score, 2, 2, 7) //print "score: 0" 2px down and 2px right from the top right screen in color 7 (white)		       
+```
+
+So our next exercise includes several steps:
+1. create a variable for score
+2. increase the score if a coin is collected
+3. display the text "score: " and then the current score as a number
+		       
+Try it yourself:
+
+<details>
+<summary>Solution</summary>
+
+```lua
+--variables
+player_x = 60
+player_y = 60
+
+coin_x = 0
+coin_y = 0
+
+score = 0
+
+--native function 1call at start
+function _init()
+	new_coin_pos()	
+end
+
+--native function update stuff
+function _update()
+	--player movement
+	if btn(⬆️) then
+		player_y -= 1
+	end
+	
+	if btn(⬇️) then
+		player_y += 1
+	end
+	
+	if btn(⬅️) then
+		player_x -= 1
+	end
+	
+	if btn(➡️) then
+		player_x += 1
+	end
+	
+	--check for coin
+	if player_on_coin() then
+		score += 1
+		new_coin_pos()
+	end
+end
+
+--native function! draw stuff
+function _draw()
+	cls(1) //clear screen grey
+	
+	print("score: "..score, 2, 2, 7)
+	
+	--draw player
+	spr(1,player_x,player_y)	
+	
+	--draw sprite 2 on 20,25
+	spr(2,coin_x,coin_y)
+end
+
+function player_on_coin()
+   if player_x >= coin_x - 8 and
+      player_x <= coin_x + 8 and
+      player_y >= coin_y - 8 and
+      player_y <= coin_y + 8 then
+   	return true
+   else 
+   	return false
+   end
+end
+
+function new_coin_pos()
+	coin_x = rnd() * 120
+	coin_y = rnd() * 120
+end
+```
+</details>		       
+
+the expected result:
+
+<img src="https://user-images.githubusercontent.com/12997366/163673012-38028bf7-5fc6-4158-b8e3-ce745ba39d56.png" width="400"/>
 	
 ### Other pico 8 features
 - Map
